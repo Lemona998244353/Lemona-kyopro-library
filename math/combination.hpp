@@ -1,48 +1,62 @@
-struct combination {
-    
-    const int MAX;
-    static constexpr long long MOD = 998244353;
+template <class Mint>
+class Combination {
+private:
+    static constexpr int DEFAULT_MAX_N = 2'000'000;
 
-    combination() : MAX(510000) {
-        COMinit();
-    };
-    combination(int n) : MAX(n+1){
-        COMinit();
+    std::vector<Mint> fact_;
+    std::vector<Mint> inv_fact_;
+
+public:
+    // 最大値を省略した場合は 2,000,000 まで前計算
+    Combination() : Combination(DEFAULT_MAX_N) {}
+
+    // 最大値を指定する場合
+    explicit Combination(int max_n) {
+        build(max_n);
     }
 
+    void build(int max_n) {
+        assert(max_n >= 0);
 
-    vector<long long> fac,finv,inv;
+        fact_.resize(max_n + 1);
+        inv_fact_.resize(max_n + 1);
 
-    // テーブルを作る前処理
-    void COMinit() {
-        fac.resize(MAX);
-        finv.resize(MAX);
-        inv.resize(MAX);
+        fact_[0] = 1;
+        for (int i = 1; i <= max_n; ++i) {
+            fact_[i] = fact_[i - 1] * i;
+        }
 
-        fac[0] = fac[1] = 1;
-        finv[0] = finv[1] = 1;
-        inv[1] = 1;
-        for (int i = 2; i < MAX; i++){
-            fac[i] = fac[i - 1] * i % MOD;
-            inv[i] = MOD - inv[MOD%i] * (MOD / i) % MOD;
-            finv[i] = finv[i - 1] * inv[i] % MOD;
+        inv_fact_[max_n] = fact_[max_n].inv();
+        for (int i = max_n; i >= 1; --i) {
+            inv_fact_[i - 1] = inv_fact_[i] * i;
         }
     }
 
-    // 二項係数計算
-    long long COM(int n, int k){
-    if (n < k) return 0;
-    if (n < 0 || k < 0) return 0;
-    return fac[n] * (finv[k] * finv[n - k] % MOD) % MOD;
+    Mint C(int n, int r) const {
+        if (n < 0 || r < 0 || r > n) return 0;
+
+        assert(n < static_cast<int>(fact_.size()));
+        return fact_[n] * inv_fact_[r] * inv_fact_[n - r];
     }
 
+    Mint P(int n, int r) const {
+        if (n < 0 || r < 0 || r > n) return 0;
+
+        assert(n < static_cast<int>(fact_.size()));
+        return fact_[n] * inv_fact_[n - r];
+    }
+
+    Mint factorial(int n) const {
+        assert(0 <= n && n < static_cast<int>(fact_.size()));
+        return fact_[n];
+    }
+
+    Mint inverse_factorial(int n) const {
+        assert(0 <= n && n < static_cast<int>(inv_fact_.size()));
+        return inv_fact_[n];
+    }
+
+    int max_n() const {
+        return static_cast<int>(fact_.size()) - 1;
+    }
 };
-
-int main(){
-    combination comb;
-    int n; cin >> n;
-    rep(i,n){
-        int p,k; cin >> p >> k;
-        cout << comb.COM(p,k) << endl;
-    }
-}
