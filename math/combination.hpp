@@ -1,7 +1,7 @@
 template <class Mint>
 class Combination {
 private:
-    static constexpr int DEFAULT_MAX_N = 2'000'000;
+    static constexpr int DEFAULT_MAX_N = 510000;
 
     std::vector<Mint> fact_;
     std::vector<Mint> inv_fact_;
