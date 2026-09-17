@@ -7,7 +7,7 @@ private:
     std::vector<Mint> inv_fact_;
 
 public:
-    // 最大値を省略した場合は 2,000,000 まで前計算
+    // 最大値を省略した場合は default_max まで前計算
     Combination() : Combination(DEFAULT_MAX_N) {}
 
     // 最大値を指定する場合
