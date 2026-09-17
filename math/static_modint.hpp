@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cassert>
 #include <iostream>
 
@@ -9,9 +11,11 @@ private:
     int _v;
 
 public:
-    ModInt() : _v(0) {}
+    using ModInt = static_modint;
 
-    ModInt(long long x) {
+    static_modint() : _v(0) {}
+
+    static_modint(long long x) {
         x %= MOD;
         if (x < 0) x += MOD;
         _v = static_cast<int>(x);
@@ -105,8 +109,8 @@ public:
                                     const ModInt& x) {
         return os << x.val();
     }
-
-    using mint998244353 = static_modint<998244353>;
-    using mint1000000007 = static_modint<1000000007>;
-
 };
+
+using mint998244353 = static_modint<998244353>;
+using mint1000000007 = static_modint<1000000007>;
+
