@@ -1,30 +1,30 @@
 //https://www.youtube.com/watch?v=UTVg7wzMWQc&t=4832s
 struct Sieve
 {
-  int n;
-  vector<int> f,primes;
-  Sieve(int n=1):n(n),f(n+1) 
+  ll n;
+  vector<ll> f,primes;
+  Sieve(ll n=1):n(n),f(n+1) 
   {
     f[0]=f[1]=-1;
-    for(int i=2; i<=n; i++)
+    for(ll i=2; i<=n; i++)
     {
       if(f[i]) continue;
       primes.emplace_back(i);
       f[i] = i;
-      for(int j=i*i; j<=n; j+=i)
+      for(ll j=i*i; j<=n; j+=i)
       {
         if(!f[j]) f[j]=i;
       }
     }
   }
 
-  bool isPrime(int x)
+  bool isPrime(ll x)
   {
     return f[x] == x;
   }
-  vector<int> factorList(int x)
+  vector<ll> factorList(ll x)
   {
-    vector<int> res;
+    vector<ll> res;
     while(x!=1)
     {
       res.emplace_back(f[x]);
@@ -33,12 +33,12 @@ struct Sieve
   return res;
   }
 
-  vector<pair<int,int>> factor(int x)
+  vector<pair<ll,ll>> factor(ll x)
   {
-    vector<int> fl = factorList(x);
+    vector<ll> fl = factorList(x);
     if(fl.size()==0) return {};
     vector<P> res(1,P(fl[0],0));
-    for(int p : fl)
+    for(ll p : fl)
     {
       if(res.back().first==p)
       {
