@@ -1,10 +1,11 @@
-template<class Monoid> struct segtree {
+template<class Monoid> 
+struct segtree {
     using S = typename Monoid::S;
     using Func = function<S(S,S)>;
 
     int N;
-    Func OP=Monoid::op;
-    S ID=Monoid::e();
+    Func OP = Monoid::op;
+    S ID = Monoid::e();
 
     int offset;
     vector<S> dat;
