@@ -41,7 +41,7 @@ struct BIT{
             return sum(r)-sum(l);
         }
 
-        // sum(i)>=wとなるような最小のi
+        // minimum i s.t. sum(i)>=w
         int lower_bound(ll w) {
             int l=0;
             for(int k=m; k; k>>=1) {

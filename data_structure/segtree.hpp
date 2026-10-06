@@ -2,7 +2,6 @@ template<class Monoid>
 struct segtree {
     private:
         using S = typename Monoid::S;
-        using Func = function<S(S,S)>;
 
         int N;
         S ID = Monoid::e();
