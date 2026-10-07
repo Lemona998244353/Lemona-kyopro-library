@@ -35,6 +35,7 @@ struct lazysegtree{
         }
 
         void push(int k){
+            assert(1 <= k && k < offset);
             all_apply(k*2, lz[k]);
             all_apply(k*2+1, lz[k]);
             lz[k] = id;
@@ -54,6 +55,7 @@ struct lazysegtree{
         S operator [] (int p) {return get(p); }
 
         void set(int p, S x){
+            assert(0 <= p && p < N);
             p += offset;
             for(int i=log; i>=1; i--) push(p >> i);
             d[p] = x;
@@ -61,12 +63,14 @@ struct lazysegtree{
         }
 
         S get(int p) {
+            assert(0 <= p && p < N);
             p += offset;
             for(int i=log; i>=1; i--) push(p>>i);
             return d[p];
         }
 
         S prod(int l, int r) {
+            assert(0 <= l && l <= r && r <= N);
             if(l==r) return e;
             l += offset;
             r += offset;
@@ -90,6 +94,7 @@ struct lazysegtree{
         S all_prod() {return d[1]; }
 
         void apply(int p, F f) {
+            assert(0 <= p && p < N);
             p += offset;
             for(int i=log; i>=1; i--) push(p >> i);
             d[p] = Monoid::mapping(f,d[p]);
@@ -97,6 +102,7 @@ struct lazysegtree{
         }
 
         void apply(int l, int r, F f) {
+            assert(0 <= l && l <= r && r <= N);
             if(l==r) return;
             
             l += offset;

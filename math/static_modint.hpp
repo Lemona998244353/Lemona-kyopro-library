@@ -1,8 +1,3 @@
-#pragma once
-
-#include <cassert>
-#include <iostream>
-
 template<int MOD>
 class static_modint {
     static_assert(MOD >= 2);
