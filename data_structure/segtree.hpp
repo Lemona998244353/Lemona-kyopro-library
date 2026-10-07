@@ -53,7 +53,11 @@ struct segtree {
         }   
         S all_prod() {return dat[1];}
 
-        int max_right(const function<bool(S)> f, int l=0) {
+        template<class F>
+        int max_right(int l, F f) {
+            assert(0 <= l && l <= N);
+            assert(f(ID));
+
             if(l==N) return N;
             l += offset;
             S sum = ID;
@@ -75,7 +79,9 @@ struct segtree {
             return N;
         }
 
-        int min_left(const function<bool(S)> f, int r=-1) {
+        template<class F>
+        int min_left(int r, F f) {
+            assert(f(ID));
             if(r==-1) r=N;
             if(r==0) return 0;
             r += offset;

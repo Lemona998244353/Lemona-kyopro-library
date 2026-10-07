@@ -4,7 +4,8 @@ struct BIT{
         vector<ll> a;
         int m;
     public:
-        BIT(ll n) : _n(n), a(n+1,0) {
+        BIT() : BIT(0) {}
+        explicit BIT(ll n) : _n(n), a(n+1,0) {
             if(n>0) {
                 m=1;
                 while(m <= n/2){
@@ -12,7 +13,7 @@ struct BIT{
                 }
             }
         }
-        BIT(const vector<ll>& b) : BIT(b.size()) {
+        explicit BIT(const vector<ll>& b) : BIT(b.size()) {
             for(ll i=0; i<_n; i++){
                 a[i+1] += b[i];
                 ll j = (i+1) + ((i+1) & -(i+1));

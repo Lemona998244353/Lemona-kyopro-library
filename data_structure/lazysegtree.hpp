@@ -31,7 +31,7 @@ struct lazysegtree{
 
         void all_apply(int k, F f){
             d[k] = Monoid::mapping(f, d[k]);
-            if(k<offset) lz[k] = Monoid::composition(f,lz[k]);
+            if(k < offset) lz[k] = Monoid::composition(f,lz[k]);
         }
 
         void push(int k){
@@ -51,6 +51,7 @@ struct lazysegtree{
         int size() const{
             return N;
         }
+        S operator [] (int p) {return get(p); }
 
         void set(int p, S x){
             p += offset;
@@ -90,7 +91,7 @@ struct lazysegtree{
 
         void apply(int p, F f) {
             p += offset;
-            for(ll i=log; i>=1; i--) push(p >> i);
+            for(int i=log; i>=1; i--) push(p >> i);
             d[p] = Monoid::mapping(f,d[p]);
             for(int i=1; i<=log; i++) update(p >> i);
         }
@@ -121,5 +122,64 @@ struct lazysegtree{
                 if((l>>i)<<i != l) update(l >> i);
                 if((r>>i)<<i != r) update((r-1) >> i);
             }
+        }
+
+        template<class G>
+        int max_right(int l, G g) {
+            assert(0 <= l && l <= N);
+            assert(g(e));
+            if(l==N) return N;
+
+            l += offset;
+            for(int i=log; i>=1; i--) push(l >> i);
+            S sm = e;
+            do {
+                while(~l & 1) l >>= 1;
+                if(!g(Monoid::op(sm,d[l]))){
+                    while(l<offset){
+                        push(l);
+                        l <<= 1;
+                        if(g(Monoid::op(sm,d[l]))){
+                            sm = Monoid::op(sm,d[l]);
+                            l++;
+                        }
+                    }
+                    return l - offset;
+                }
+                sm = Monoid::op(sm,d[l]);
+                l++;
+            }while((-l & l) != l);
+
+            return N;
+        }
+
+        template<class G>
+        int min_left(int r, G g) {
+            assert(0 <= r && r <= N);
+            assert(g(e));
+            if(r==0) return 0;
+
+            r += offset;
+            for(int i=log; i>=1; i--) push((r-1) >> i);
+            S sm = e;
+            
+            do{
+                r--;
+                while(r > 1 && r & 1) r >>= 1;
+                if(!g(Monoid::op(d[r],sm))){
+                    while(r < offset) {
+                        push(r);
+                        r = r * 2 + 1;
+                        if(g(Monoid::op(d[r],sm))){
+                            sm = Monoid::op(d[r],sm);
+                            r--;
+                        }
+                    }
+                    return r + 1 - offset;
+                }
+                sm = Monoid::op(d[r],sm);
+            }while((-r & r) != r);
+
+            return 0;
         }
 };
