@@ -1,7 +1,7 @@
 template<typename G>
 struct LCA{
     ll n,lg,root;
-    vector<vector<ll>> g;
+    G g;
     vector<vector<int>> parent;
     vector<int> dist;
 
@@ -26,9 +26,9 @@ struct LCA{
     void dfs(ll now, ll par, ll d){
         dist[now] = d;
         parent[now][0] = par;
-        for(auto to : g[now]){
-            if(to==par) continue;
-            dfs(to,now,d+1);
+        for(auto next : g[now]){
+            if(next.to==par) continue;
+            dfs(next.to,now,d+1);
         }
     }
 
