@@ -3,7 +3,6 @@ struct euler_tour{
     ll n,root,time;
     struct node{
         ll in,out;
-        node() : in(0),out(0) {}
     };
     vector<node> t;
     G g;
@@ -25,7 +24,7 @@ struct euler_tour{
 
     euler_tour(G g, ll root) : n(g.size()), root(root), g(g), time(0) {
         dist.assign(n,-1);
-        rep(i,n) t.emplace_back(node());
+        rep(i,n) t.emplace_back(node);
         build();
     }
     node operator[](int k) {return t[k]; }
