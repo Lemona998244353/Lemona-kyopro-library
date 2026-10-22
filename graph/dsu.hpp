@@ -13,7 +13,6 @@ struct dsu{
         }
 
     public:
-        dsu(bool track = false) : _n(0), track_members(track) {};
         explicit dsu(int n, bool track = false) : _n(n), track_members(track), p_or_s(n,-1) {
             if(track_members){
                 members.resize(_n);
