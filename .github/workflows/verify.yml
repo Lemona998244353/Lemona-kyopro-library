@@ -7,10 +7,14 @@ on:
 
 permissions:
   contents: read
-
+  pages: write
+  id-token: write
 jobs:
   verify:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -23,3 +27,31 @@ jobs:
 
       - name: Run verification
         run: oj-verify run
+
+      - name: Generate documentation
+        run: oj-verify docs
+
+      - name: Configure GitHub Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+
+      - name: Build documentation site
+        working-directory: .verify-helper/markdown
+        env:
+          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+        run: |
+          bundle install
+          bundle exec jekyll build --baseurl "$PAGES_BASE_PATH"
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: .verify-helper/markdown/_site
+
+      - name: Deploy site
+        id: deployment
+        uses: actions/deploy-pages@v4
