@@ -1,4 +1,4 @@
-#include "Lemona-kyopro-library/math/static_modint.hpp"
+#include "static_modint.hpp"
 template <class Mint>
 class Combination {
 private:
