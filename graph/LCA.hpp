@@ -1,3 +1,6 @@
+#pragma once
+#include "../template.hpp"
+
 template<typename G>
 struct LCA{
     ll n,lg,root;

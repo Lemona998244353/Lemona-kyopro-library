@@ -1,3 +1,6 @@
+#pragma once
+#include "../template.hpp"
+
 auto KMP(const string& s){
     ll n = s.size();
     vector<ll> r(n+1);

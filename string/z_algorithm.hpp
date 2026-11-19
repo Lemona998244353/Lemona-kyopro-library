@@ -1,3 +1,6 @@
+#pragma once
+#include "../template.hpp"
+
 auto z_algorithm(const string& s){
     ll n = s.size();
     vector<ll> z(n);

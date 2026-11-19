@@ -1,3 +1,6 @@
+#pragma once
+#include "../template.hpp"
+
 template<class T>
 struct Compressor{
     vector<T> xs;

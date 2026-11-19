@@ -1,3 +1,6 @@
+#pragma once
+#include "../template.hpp"
+
 template<int MOD>
 class static_modint {
     static_assert(MOD >= 2);

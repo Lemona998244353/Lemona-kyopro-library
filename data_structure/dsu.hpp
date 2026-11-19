@@ -1,3 +1,6 @@
+#pragma once
+#include "../template.hpp"
+
 struct dsu{
     private:
         int _n;

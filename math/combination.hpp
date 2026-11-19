@@ -1,3 +1,5 @@
+#pragma once
+#include "../template.hpp"
 #include "static_modint.hpp"
 template <class Mint>
 class Combination {

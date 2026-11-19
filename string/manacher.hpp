@@ -1,3 +1,6 @@
+#pragma once
+#include "../template.hpp"
+
 auto manacher(const string& s){
     ll n = s.size();
     ll c=0,r=0;

@@ -1,3 +1,6 @@
+#pragma once
+#include "../template.hpp"
+
 template<class Monoid> 
 struct segtree {
     private:

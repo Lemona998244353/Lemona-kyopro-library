@@ -1,3 +1,6 @@
+#pragma once
+#include "../template.hpp"
+
 //https://www.youtube.com/watch?v=UTVg7wzMWQc&t=4832s
 struct Sieve
 {

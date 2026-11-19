@@ -1,3 +1,7 @@
+#pragma once
+#include "../template.hpp"
+
+
 struct BIT{
     private :
         ll _n;
