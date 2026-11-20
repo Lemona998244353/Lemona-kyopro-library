@@ -3,27 +3,26 @@
 
 template<int sigma=26, char base='a'>
 struct trie{
-    trie() : node(1,init()), cnt(1,0), end(1) {}
+    trie() : nodes(1) {}
     
     vector<int> add(const string& s){
         vector<int> res;
         int pos = 0;
         res.emplace_back(pos);
-        cnt[pos]++;
+        nodes[pos].cnt++;
         for(char ch : s){
             int c = ch-base;
             assert(0<=c && c<sigma);
-            if(node[pos][c]==-1){
-                node[pos][c] = node.size();
-                node.emplace_back(init());
-                cnt.emplace_back(0);
-                end.emplace_back();
+            if(nodes[pos].child[c]==-1){
+                nodes[pos].child[c] = nodes.size();
+                nodes.emplace_back();
+                nodes[nodes[pos].child[c]].par = pos;
             }
-            pos = node[pos][c];
-            cnt[pos]++;
+            pos = nodes[pos].child[c];
+            nodes[pos].cnt++;
             res.emplace_back(pos);
         }
-        end[pos].emplace_back(end_node.size());
+        nodes[pos].end.emplace_back(end_node.size());
         end_node.emplace_back(pos);
         el.emplace_back(s);
         return res;
@@ -35,41 +34,46 @@ struct trie{
         for(int i=0; i<s.size(); i++){
             int c = s[i]-base;
             assert(0<=c && c<sigma);
-            if(node[pos][c]==-1) break;
-            pos = node[pos][c];
+            if(nodes[pos].child[c]==-1) break;
+            pos = nodes[pos].child[c];
             res[i] = pos;
         }
         return res;
     }
 
     int sub_cnt(int v) const {
-        return cnt[v];
+        return nodes[v].cnt;
     }
 
     int next(int v, char ch) const {
-        assert(0<=v && v<node.size());
+        assert(0<=v && v<nodes.size());
         int c = ch - base;
         assert(0<=c && c<sigma);
-        return node[v][c];
+        return nodes[v].child[c];
+    }
+
+    int parent(int v) const {
+        asser(0<=v && v<nodes.size());
+        return nodes[v].par;
     }
 
     string kth_element(int k) const {
-        assert(0<=k && k<cnt[0]);
+        assert(0<=k && k<nodes[0].cnt);
         string res;
         int pos = 0;
         while(true){
-            if(k < end[pos].size()) return res;
-            k -= end[pos].size();
+            if(k < nodes[pos].end.size()) return res;
+            k -= nodes[pos].end.size();
 
             for(int i=0; i<sigma; i++){
-                int to = node[pos][i];
+                int to = nodes[pos].child[i];
                 if(to==-1) continue;
-                if(k < cnt[to]){
+                if(k < nodes[to].cnt){
                     res.push_back((char)(base+i));
                     pos = to;
                     break;
                 }
-                k -= cnt[to];
+                k -= nodes[to].cnt;
             }
         }
     }
@@ -93,22 +97,22 @@ struct trie{
         for(char ch : pre){
             int c = ch - base;
             if(c<0 || c>=sigma) return 0;
-            pos = node[pos][c];
+            pos = nodes[pos].child[c];
             if(pos == -1) return 0;
         }
-        return cnt[pos];
+        return nodes[pos].cnt;
     }
 
     //この文字列のprefixであるような文字列の数
     int prefix_count(const string& s) const{
         int pos = 0, res = 0;
-        res += end[pos].size();
+        res += nodes[pos].end.size();
         for(char ch : s){
             int c = ch - base;
             if(c<0 || c>=sigma) return res;
-            pos = node[pos][c];
+            pos = nodes[pos].child[c];
             if(pos == -1) return res;
-            res += end[pos].size();
+            res += nodes[pos].end.size();
         }
         return res;
     }
@@ -117,43 +121,44 @@ struct trie{
     bool erase(const string& s){
         auto path = track(s);
         int v = path.empty() ? 0 : path.back();
-        if(v == -1 || end[v].empty()) return false;
+        if(v == -1 || nodes[v].end.empty()) return false;
 
-        int id = end[v].back();
-        end[v].pop_back();
+        int id = nodes[v].end.back();
+        nodes[v].end.pop_back();
         end_node[id] = -1;
 
-        cnt[0]--;
-        for(int u : path) cnt[u]--;
+        nodes[0].cnt--;
+        for(int u : path) nodes[u].cnt--;
         return true;
     }
 
     private:
-    vector<array<int,sigma>> node;
-    vector<int> cnt,end_node;
-    vector<vector<int>> end;
-    vector<string> el;
-    constexpr array<int,sigma> init(){
-        array<int,sigma> x;
-        x.fill(-1);
-        return x;
-    }
+    struct Node {
+        array<int, sigma> child;
+        int par = -1;
+        int cnt = 0;
+        vector<int> end;
+        Node() { child.fill(-1); }
+    };
+    vector<Node> nodes;
+    vector<int> end_node;
+    vector<string> el;    
 
     int count_bound(const string& s, bool in) const {
         int pos = 0, res = 0;
         for(char ch : s){
-            res += end[pos].size();
+            res += nodes[pos].end.size();
             int c = ch - base;
             if(c<0) return res;
             for(int j=0; j<c && j<sigma; j++){
-                int to = node[pos][j];
-                if(to != -1) res += cnt[to];
+                int to = nodes[pos].child[j];
+                if(to != -1) res += nodes[to].cnt;
             }
             if(c>=sigma) return res;
-            pos = node[pos][c];
+            pos = nodes[pos].child[c];
             if(pos == -1) return res;
         }
-        if(in) res += end[pos].size();
+        if(in) res += nodes[pos].end.size();
         return res;
     }
 };
