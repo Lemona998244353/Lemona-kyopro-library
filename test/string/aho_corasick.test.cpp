@@ -13,6 +13,7 @@ int main(){
         ac.add(s);
     }
     ac.build();
+    cout << ac.state_cnt() << endl;
     for(int i=1; i<ac.state_cnt(); i++){
         cout << ac.par(i) << ' ' << ac.link(i) << endl;
     }
