@@ -31,7 +31,7 @@ struct aho_corasick{
         if(built) return;
 
         queue<int> q;
-        nodes[0].link = 0;
+        nodes[0].link = -1;
 
         for(int c=0; c<sigma; c++){
             int to = nodes[0].child[c];
@@ -84,6 +84,11 @@ struct aho_corasick{
         return nodes.size();
     }
 
+    int par(int v) const {
+        assert(0<=v && v<state_cnt());
+        return nodes[v].par;
+    }
+
     int next(int v, char ch) const {
         assert(built);
         assert(0<=v && v<state_cnt());
@@ -92,10 +97,31 @@ struct aho_corasick{
         return nodes[v].accept[c];
     }
 
+    int link(int v) const {
+        assert(built);
+        assert(0<=v && v<state_cnt());
+        return nodes[v].link;
+    }
+
     int match_cnt(int v) const {
         assert(built);
         assert(0<=v && v<state_cnt());
         return nodes[v].cnt;
+    }
+
+    string operator [](int k) const {
+        assert(0<=k && k<end_node.size());
+        return el[k];
+    }
+
+    int last(int k) const {
+        assert(0<=k && k<end_node.size());
+        return end_node[k];
+    }
+
+    vector<int> ends(int v) const {
+        assert(0<=v && v<state_cnt());
+        return nodes[v].end;
     }
 
     private:

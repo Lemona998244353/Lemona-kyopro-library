@@ -53,7 +53,7 @@ struct trie{
     }
 
     int parent(int v) const {
-        asser(0<=v && v<nodes.size());
+        assert(0<=v && v<nodes.size());
         return nodes[v].par;
     }
 
@@ -78,9 +78,24 @@ struct trie{
         }
     }
 
+    int state_cnt() const {
+        return nodes.size();
+    }
+
     string operator [](int k) const {
         assert(0<=k && k<end_node.size());
+        assert(end_node[k] != -1);
         return el[k];
+    }
+
+    int last(int k) const {
+        assert(0<=k && k<end_node.size());
+        return end_node[k];
+    }
+
+    vector<int> ends(int v) const {
+        assert(0<=v && v<nodes.size());
+        return nodes[v].end;
     }
 
     int count_less(const string& s) const {
@@ -189,8 +204,20 @@ struct binary_trie{
         return tr.next(v,ch);
     }
 
+    int state_cnt() const{
+        return tr.state_cnt();
+    }
+
     string operator [] (int k) const {
         return tr[k];
+    }
+
+    int last(int k) const {
+        return tr.last(k);
+    }
+
+    vector<int> ends(int v) const {
+        return tr.ends(v);
     }
 
     int count_prefix(const string& pre) const {
@@ -225,12 +252,13 @@ struct binary_trie{
         assert(s.size() <= depth);
         return string(depth - s.size(), '0') + s;
     }
-    static string to_fixed_bits(const ull& x){
-        assert((x >> (depth-1)) <= 1);
-        string res;
+    static string to_fixed_bits(ull x){
+        string res(depth,'0');
         for(int i=depth-1; i>=0; i--){
-            res += ((x>>i)&1) ? '1' : '0';
+            res[i] = (x&1ULL) ? '1' : '0';
+            x >>= 1;
         }
+        assert(x == 0);
         return res;
     }
 };
